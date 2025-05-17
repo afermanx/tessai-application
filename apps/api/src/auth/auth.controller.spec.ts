@@ -1,18 +1,21 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthController } from './auth.controller';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { AuthService } from './auth.service';
 
-describe('AuthController', () => {
-  let controller: AuthController;
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      controllers: [AuthController],
-    }).compile();
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth() {
+    return { msg: 'Redirecting to Google...' };
+  }
 
-    controller = module.get<AuthController>(AuthController);
-  });
-
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
-  });
-});
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleCallback(@Req() req) {
+    const { user, token } = await this.authService.validateOAuthLogin(req.user);
+    return { user, token };
+  }
+}

@@ -3,6 +3,9 @@ import { BaseEntity } from './BaseEntity';
 
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
+  @Column({ nullable: true })
+  avatar: string;
+
   @Column()
   name: string;
 
