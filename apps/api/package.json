@@ -27,6 +27,8 @@
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/typeorm": "^11.0.0",
     "cache-manager-ioredis": "^2.1.0",
+    "dotenv": "^16.5.0",
+    "mysql2": "^3.14.1",
     "nestjs-zod": "^4.3.1",
     "openai": "^4.98.0",
     "redis": "^5.0.1",
