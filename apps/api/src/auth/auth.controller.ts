@@ -1,4 +1,4 @@
-import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, UseGuards, Post } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 
@@ -17,5 +17,10 @@ export class AuthController {
   async googleCallback(@Req() req) {
     const { user, token } = await this.authService.validateOAuthLogin(req.user);
     return { user, token };
+  }
+
+  @Post('guest')
+  async guestLogin() {
+    return this.authService.loginAsGuest();
   }
 }

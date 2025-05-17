@@ -18,7 +18,32 @@ export class AuthService {
       user = await this.userService.createWithGoogle(profile);
     }
 
-    const token = this.jwtService.sign({ sub: user.id });
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      avatar: user.avatar,
+    });
+    return { user, token };
+  }
+
+  async loginAsGuest() {
+    const name = `Convidado_${Math.floor(Math.random() * 10000)}`;
+    const email = `${name}@guest.local`;
+
+    const user = await this.userService.createGuestUser({
+      name,
+      email,
+      password: '123456',
+    });
+
+    const token = this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+      name: user.name,
+      avatar: user.avatar,
+    });
+
     return { user, token };
   }
 }
