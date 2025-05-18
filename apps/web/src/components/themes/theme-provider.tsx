@@ -29,7 +29,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       <Button
         onClick={toggleTheme}
         variant="outline"
-        className="cursor-pointer fixed top-4 right-4 z-50"
+        className="fixed z-50 cursor-pointer top-15 right-4"
       >
         {theme === "light" ? <Sun /> : <Moon />}
       </Button>
