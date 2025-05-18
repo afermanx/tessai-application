@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { ExecutionContext } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 
 describe('AuthController', () => {
   let controller: AuthController;
@@ -21,7 +22,6 @@ describe('AuthController', () => {
       .overrideGuard(AuthGuard('google'))
       .useValue({
         canActivate: (context: ExecutionContext) => {
-          // Simula que o usuário passou pelo Google e retornou com req.user preenchido
           const request = context.switchToHttp().getRequest();
           request.user = {
             id: 'google123',
@@ -50,24 +50,23 @@ describe('AuthController', () => {
   });
 
   describe('GET /auth/google/callback', () => {
-    it('should return user and token', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@gmail.com',
-        name: 'Test',
-        avatar: 'a.png',
-      };
+    it('should redirect with token', async () => {
       const mockToken = 'jwt_token_123';
       mockAuthService.validateOAuthLogin.mockResolvedValue({
-        user: mockUser,
         token: mockToken,
       });
 
       const req = { user: { id: 'google123' } };
-      const result = await controller.googleCallback(req);
+      const res = {
+        redirect: jest.fn(),
+      } as any as Response;
+
+      await controller.googleCallback(req, res);
 
       expect(mockAuthService.validateOAuthLogin).toHaveBeenCalledWith(req.user);
-      expect(result).toEqual({ user: mockUser, token: mockToken });
+      expect(res.redirect).toHaveBeenCalledWith(
+        `${process.env.FRONTEND_URL}/redirect?token=${mockToken}`,
+      );
     });
   });
 
