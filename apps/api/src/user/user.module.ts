@@ -6,9 +6,9 @@ import { UserController } from './user.controller';
 import { User } from '../entities/User';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])], // <-- Necessário para injeção do Repository<User>
+  imports: [TypeOrmModule.forFeature([User])],
   providers: [UserService],
   controllers: [UserController],
-  exports: [UserService], // Opcional: útil se outro módulo (ex: AuthModule) precisar do UserService
+  exports: [UserService],
 })
 export class UserModule {}
