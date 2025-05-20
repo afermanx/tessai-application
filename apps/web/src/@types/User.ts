@@ -1,5 +1,6 @@
 export interface UserSession {
-  name?: string;
-  email?: string;
-  avatar?: string;
+  sub: string;
+  name: string;
+  email: string;
+  avatar: string;
 }

@@ -1,13 +1,25 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
+import { BaseEntity } from './BaseEntity';
+import { Conversation } from './Conversation';
 import { User } from './User';
 
-import { BaseEntity } from './BaseEntity';
-
-@Entity({ name: 'messages' })
+export enum SenderType {
+  USER = 'user',
+  ASSISTANT = 'assistant',
+}
+@Entity('messages')
 export class Message extends BaseEntity {
-  @Column()
+  @Column('text')
   content: string;
 
-  @ManyToOne(() => User, (user) => user.messages)
-  sender: User;
+  @Column({ type: 'enum', enum: SenderType })
+  sender: SenderType;
+
+  @ManyToOne(() => User, { nullable: true })
+  user?: User;
+
+  @ManyToOne(() => Conversation, (conversation) => conversation.messages, {
+    onDelete: 'CASCADE',
+  })
+  conversation: Conversation;
 }
